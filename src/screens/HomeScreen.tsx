@@ -1,11 +1,17 @@
-import React from "react";
+import { useNavigation } from "@react-navigation/native";
+import React, { useContext } from "react";
 import { Text, View, StyleSheet, FlatList, Dimensions, TouchableOpacity, Image } from "react-native";
+import { MealContext } from "../contexts/meals-context";
 
 export const HomeScreen: React.FC = () => {
   const { height, width } = Dimensions.get('window');
 
+  const {meals, getPercentOfMealsInDiet} = useContext(MealContext)
+
+  const navigation = useNavigation()
+
   // Lista de refeições disponíveis
-  const meals = ["Café da Manhã", "Almoço", "Jantar", "Lanche da Tarde", "Lanche da Manhã", "Ceia", "Sobremesa"];
+  // const meals = ["Café da Manhã", "Almoço", "Jantar", "Lanche da Tarde", "Lanche da Manhã", "Ceia", "Sobremesa"];
 
   // Lista de horários possíveis
   const times = ["08:00", "12:00", "18:00", "15:00", "10:00", "21:00", "22:00"];
@@ -52,7 +58,7 @@ export const HomeScreen: React.FC = () => {
         <Image 
         source={require('../assets/garfo.webp')} // Certifique-se de que o caminho esteja correto
         style={styles.image}
-        title="garfo"/>
+        />
         <Text style={styles.image}>Daily Diet</Text>
       </View>
       
@@ -60,8 +66,8 @@ export const HomeScreen: React.FC = () => {
         <Text style={styles.comida}>Refeições</Text>
         <TouchableOpacity
           style={styles.comidaButton}
-          title="+Nova Refeição"
-          onPress={() => navigation.navigate('Details')}
+          
+          onPress={() => navigation.navigate('CreateMeal')}
         >
           <Text style={styles.comidaButtonText}>+Nova Refeição</Text>
         </TouchableOpacity>
@@ -69,12 +75,22 @@ export const HomeScreen: React.FC = () => {
 
       <View style={styles.listContainer}>
         <FlatList
-          data={daysWithMealsAndTimes}
+          data={meals}
           renderItem={({ item }) => (
             <View style={styles.dateContainer}>
-              <Text style={styles.dateText}>{item.date}</Text>
-              <Text style={styles.mealText}>{item.meal}</Text>
-              <Text style={styles.timeText}>{item.time}</Text>
+              <Text style={styles.dateText}>{item.dateTime.toISOString()}</Text>
+              <Text style={styles.mealText}>{item.name}</Text>
+              <Text style={styles.timeText}>{item.dateTime.toISOString()}</Text>
+  
+              <View 
+                style={{
+                  width: 2,
+                  height: 14,
+                  backgroundColor: "#F3BABD",
+                  borderRadius: 99999
+                }}
+              />
+
             </View>
           )}
           keyExtractor={(item, index) => index.toString()}
