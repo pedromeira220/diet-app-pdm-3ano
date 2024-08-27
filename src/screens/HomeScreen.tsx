@@ -1,97 +1,122 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import { Text, View, StyleSheet, FlatList, Dimensions, TouchableOpacity, Image } from "react-native";
 import { MealContext } from "../contexts/meals-context";
+import { getStatusBarHeight } from "react-native-iphone-screen-helper";
+import { colors } from "../theme/colors";
+import { Button } from "../components/button";
+import Feather from '@expo/vector-icons/Feather';
 
 export const HomeScreen: React.FC = () => {
   const { height, width } = Dimensions.get('window');
 
-  const {meals, getPercentOfMealsInDiet} = useContext(MealContext)
+  const { meals, getPercentOfMealsInDiet } = useContext(MealContext)
 
   const navigation = useNavigation() as any
 
-  // Lista de refeições disponíveis
-  // const meals = ["Café da Manhã", "Almoço", "Jantar", "Lanche da Tarde", "Lanche da Manhã", "Ceia", "Sobremesa"];
-
-  // Lista de horários possíveis
-  const times = ["08:00", "12:00", "18:00", "15:00", "10:00", "21:00", "22:00"];
-
-  // Função para embaralhar a lista
-  const shuffleArray = (array) => {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  };
-
-  // Função para gerar os próximos 7 dias com refeições e horários aleatórios
-  const generateNext7DaysWithMealsAndTimes = () => {
-    let days = [];
-    let shuffledMeals = shuffleArray([...meals]); // Embaralha as refeições
-    let shuffledTimes = shuffleArray([...times]); // Embaralha os horários
-
-    for (let i = 0; i < 7; i++) {
-      let date = new Date();
-      date.setDate(date.getDate() + i); // Incrementa o dia
-      let formattedDate = date.toLocaleDateString('pt-BR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: '2-digit',
-      });
-
-      days.push({
-        date: formattedDate,
-        meal: shuffledMeals[i % shuffledMeals.length], // Associa a refeição embaralhada ao dia
-        time: shuffledTimes[i % shuffledTimes.length] // Associa o horário embaralhado ao dia
-      });
-    }
-    return days;
-  };
-
-  // Gera a lista de datas com refeições e horários
-  const daysWithMealsAndTimes = generateNext7DaysWithMealsAndTimes();
+  const percentOfMealsInDiet = useMemo(() => {
+    return getPercentOfMealsInDiet()
+  }, [meals])
 
   return (
     <View style={styles.container}>
-      <View style={styles.garfo}>
-        <Image 
-        source={require('../assets/garfo.webp')} // Certifique-se de que o caminho esteja correto
-        style={styles.image}
+      <View style={{
+        marginTop: getStatusBarHeight(),
+        paddingHorizontal: 24
+      }}>
+        <Image
+          source={require('../assets/logo.png')}
+          style={styles.image}
         />
-        <Text style={styles.image}>Daily Diet</Text>
       </View>
-      
+
+      {
+        meals.length != 0 ? (
+          <TouchableOpacity style={{
+            backgroundColor: percentOfMealsInDiet >= 0.5 ? colors.green.light : colors.red.light,
+            marginHorizontal: 24,
+            alignItems: "center",
+            paddingHorizontal: 16,
+            paddingVertical: 20,
+            marginTop: 16
+          }} onPress={() => {
+            navigation.navigate("Statistics")
+          }}>
+            <Text style={{
+              fontSize: 32,
+              fontWeight: 600,
+              marginBottom: 2
+            }}>{(percentOfMealsInDiet * 100).toFixed(2)}%</Text>
+            <Text>das refeições dentro da dieta</Text>
+
+            <Feather name="arrow-up-right" size={24} color={percentOfMealsInDiet >= 0.5 ? colors.green.dark : colors.red.dark} style={{
+              position: "absolute",
+              top: 8,
+              right: 8
+            }} />
+          </TouchableOpacity>
+        ) : null
+      }
+
+
+
       <View style={styles.header}>
-        <Text style={styles.comida}>Refeições</Text>
-        <TouchableOpacity
-          style={styles.comidaButton}
-          
-          onPress={() => navigation.navigate('CreateMeal')}
-        >
-          <Text style={styles.comidaButtonText}>+Nova Refeição</Text>
-        </TouchableOpacity>
+        <Button onPress={() => {
+          navigation.navigate("CreateMeal")
+        }}>
+          <Text style={{
+            color: '#fff',
+            fontSize: 16,
+          }}>Nova refeição</Text>
+        </Button>
       </View>
 
       <View style={styles.listContainer}>
         <FlatList
           data={meals}
-          renderItem={({ item }) => (
-            <TouchableOpacity style={styles.dateContainer} onPress={() => {
+          renderItem={({ item, index }) => (
+            <TouchableOpacity style={{
+              borderWidth: 1,
+              borderRadius: 6,
+              flexDirection: "row",
+              alignItems: 'center',
+              padding: 16,
+              borderColor: "#DDDEDF",
+              justifyContent: "space-between",
+              marginTop: index == 0 ? 0 : 12
+            }} onPress={() => {
               navigation.navigate("Meal", {
                 mealId: item.id
               })
             }}>
-              <Text style={styles.dateText}>{item.dateTime.toISOString()}</Text>
-              <Text style={styles.mealText}>{item.name}</Text>
-              <Text style={styles.timeText}>{item.dateTime.toISOString()}</Text>
-  
-              <View 
+              <View style={{
+                flexDirection: "row",
+                alignItems: 'center',
+              }}>
+                <Text style={{
+                  fontSize: 16,
+                  fontWeight: 500
+                }}>12/01/2024 - 20:00</Text>
+                <View
+                  style={{
+                    width: 2,
+                    height: 14,
+                    backgroundColor: "#DDDEDF",
+                    marginHorizontal: 12
+                  }}
+                />
+
+                <Text style={{
+                  fontSize: 16
+                }}>{item.name}</Text>
+              </View>
+
+              <View
                 style={{
-                  width: 2,
+                  width: 14,
                   height: 14,
-                  backgroundColor: "#F3BABD",
-                  borderRadius: 99999
+                  backgroundColor: item.isOnDiet ? colors.green.mid : colors.red.mid,
+                  borderRadius: 9999
                 }}
               />
 
@@ -107,22 +132,20 @@ export const HomeScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.white
   },
   header: {
-    paddingVertical: '5%',
-    paddingHorizontal: '5%',
+    paddingTop: 24,
+    paddingHorizontal: 24,
     backgroundColor: '#f9f9f9',
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
   },
   image: {
-    width: 100, // Defina a largura desejada
-    height: 100, // Defina a altura desejada
-    resizeMode: 'contain', // Pode usar 'cover', 'contain', etc.
+    width: 82,
+    height: 37,
+    resizeMode: 'contain',
     marginBottom: 10,
-    color: 'black',
-    fontSize: 0.05 * Dimensions.get('window').width, // Responsivo ao tamanho da tela
-    flexDirection: 'row'
   },
   comida: {
     fontSize: 0.07 * Dimensions.get('window').width, // Responsivo ao tamanho da tela
@@ -142,10 +165,11 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
-    padding: '5%',
+    paddingHorizontal: 24,
+    paddingVertical: 24,
     backgroundColor: '#fff',
   },
-  dateContainer: {
+  listItemContainer: {
     marginBottom: '5%',
     padding: '5%',
     borderWidth: 1,

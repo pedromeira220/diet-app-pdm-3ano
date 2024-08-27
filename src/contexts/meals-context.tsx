@@ -44,7 +44,7 @@ export const MealContextProvider: React.FC<MealContextProviderProps> = ({childre
   */
 
   const addMealToList = (meal: Meal) => {
-    setMeals(state => [...state, meal])
+    setMeals(state => [meal, ...state])
   }
 
   const getPercentOfMealsInDiet = () => {

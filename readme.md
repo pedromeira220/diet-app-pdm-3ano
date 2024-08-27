@@ -28,11 +28,11 @@ Para utilizar o app, basta adicionar sua refeição clicando no botão "adiciona
 
 ## Vídeos de demonstração
 
-[Link para o vídeo de demonstração](https://www.youtube.com/watch?v=123456)
+[Link para o vídeo de demonstração](./assets/video.mp4)
 
 ## Imagens do aplicativo
 
-![Imagem do aplicativo](https://www.imagem.com)
+![Imagem do aplicativo](./assets/screenshot.png)
 
 ## Desenvolvedores e suas funções
 - Arthur: Tela Home

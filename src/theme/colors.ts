@@ -6,10 +6,12 @@ export const colors = {
   },
   red: {
     dark: "#BF3B44",
+    mid: "#F3BABD",
     light: "#F4E6E7"
   },
   green: {
     dark: "#639339",
+    mid: "#CBE4B4",
     light: "#E5F0DB"
   },
   white: "#fff"
