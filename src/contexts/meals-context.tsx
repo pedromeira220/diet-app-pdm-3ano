@@ -7,6 +7,7 @@ type MealContextType = {
   getPercentOfMealsInDiet: () => number
   getMealById: (id: string) => Meal | null
   deleteMealById: (id: string) => void
+  getMealsBestSequence: () => number
 }
 
 export const MealContext = createContext({} as MealContextType)
@@ -61,6 +62,39 @@ export const MealContextProvider: React.FC<MealContextProviderProps> = ({childre
     
   }
 
+  const getMealsBestSequence = () => {
+    let bestSequenceCount = 0;
+    let currentCount = 0;
+    let previousDayWasOnDiet = true;
+    const sortedMealsByMealDate = meals.sort(
+      (a, b) => a.dateTime.getTime() - b.dateTime.getTime(),
+    );
+
+    sortedMealsByMealDate.forEach((meal) => {
+      if (meal.isOnDiet) {
+        currentCount = currentCount + 1;
+
+        if (previousDayWasOnDiet) {
+          if (currentCount > bestSequenceCount) {
+            bestSequenceCount = currentCount;
+          }
+        }
+
+        previousDayWasOnDiet = true;
+      } else {
+        currentCount = 0;
+
+        previousDayWasOnDiet = false;
+      }
+    });
+
+    if (currentCount > bestSequenceCount) {
+      bestSequenceCount = currentCount;
+    }
+
+    return bestSequenceCount;
+  }
+
   const getMealById = (id: string): Meal | null=> {
     const mealFound = meals.find(meal => meal.id === id)
 
@@ -76,7 +110,14 @@ export const MealContextProvider: React.FC<MealContextProviderProps> = ({childre
   }
 
   return (
-    <MealContext.Provider value={{addMealToList, meals, getPercentOfMealsInDiet, getMealById, deleteMealById}}>
+    <MealContext.Provider value={{
+        addMealToList, 
+        meals, 
+        getPercentOfMealsInDiet, 
+        getMealById,
+        deleteMealById,
+        getMealsBestSequence
+      }}>
       {children}
     </MealContext.Provider>
   )

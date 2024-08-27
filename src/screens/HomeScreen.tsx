@@ -6,6 +6,7 @@ import { getStatusBarHeight } from "react-native-iphone-screen-helper";
 import { colors } from "../theme/colors";
 import { Button } from "../components/button";
 import Feather from '@expo/vector-icons/Feather';
+import { format } from "date-fns";
 
 export const HomeScreen: React.FC = () => {
   const { height, width } = Dimensions.get('window');
@@ -21,7 +22,7 @@ export const HomeScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       <View style={{
-        marginTop: getStatusBarHeight(),
+        marginTop: getStatusBarHeight() + 16,
         paddingHorizontal: 24
       }}>
         <Image
@@ -96,7 +97,7 @@ export const HomeScreen: React.FC = () => {
                 <Text style={{
                   fontSize: 16,
                   fontWeight: 500
-                }}>12/01/2024 - 20:00</Text>
+                }}>{format(item?.dateTime, "dd/MM/yyyy")} - {format(item?.dateTime, "HH:mm")}</Text>
                 <View
                   style={{
                     width: 2,

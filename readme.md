@@ -37,7 +37,7 @@ Para utilizar o app, basta adicionar sua refeição clicando no botão "adiciona
 ## Desenvolvedores e suas funções
 - Arthur: Tela Home
 - Igor: Tela estatísticas
-- Felipe: Tela Home
+- Felipe: Tela estatísticas
 - Juan: Tela de cadastro da refeição
 - Nicolas: Tela de cadastro refeição
 - Pedro: Tela detalhes refeição e ajustes
