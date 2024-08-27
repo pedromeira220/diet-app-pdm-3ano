@@ -15,8 +15,8 @@ export const AppNavigator: React.FC = () => {
         headerShown: false
       }}>
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="CreateMeal" component={CreateMealScreen} />
         <Stack.Screen name="Meal" component={MealScreen} />
+        <Stack.Screen name="CreateMeal" component={CreateMealScreen} />
         <Stack.Screen name="Statistics" component={StatisticsScreen} />
       </Stack.Navigator>
     </NavigationContainer>

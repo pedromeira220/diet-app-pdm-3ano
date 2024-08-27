@@ -8,7 +8,7 @@ export const HomeScreen: React.FC = () => {
 
   const {meals, getPercentOfMealsInDiet} = useContext(MealContext)
 
-  const navigation = useNavigation()
+  const navigation = useNavigation() as any
 
   // Lista de refeições disponíveis
   // const meals = ["Café da Manhã", "Almoço", "Jantar", "Lanche da Tarde", "Lanche da Manhã", "Ceia", "Sobremesa"];
@@ -77,7 +77,11 @@ export const HomeScreen: React.FC = () => {
         <FlatList
           data={meals}
           renderItem={({ item }) => (
-            <View style={styles.dateContainer}>
+            <TouchableOpacity style={styles.dateContainer} onPress={() => {
+              navigation.navigate("Meal", {
+                mealId: item.id
+              })
+            }}>
               <Text style={styles.dateText}>{item.dateTime.toISOString()}</Text>
               <Text style={styles.mealText}>{item.name}</Text>
               <Text style={styles.timeText}>{item.dateTime.toISOString()}</Text>
@@ -91,7 +95,7 @@ export const HomeScreen: React.FC = () => {
                 }}
               />
 
-            </View>
+            </TouchableOpacity>
           )}
           keyExtractor={(item, index) => index.toString()}
         />

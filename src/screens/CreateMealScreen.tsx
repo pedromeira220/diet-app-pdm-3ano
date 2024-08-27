@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, TextInput, Button, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { MealContext } from '../contexts/meals-context';
 import { useNavigation } from '@react-navigation/native';
 import { colors } from '../theme/colors';
@@ -14,7 +14,6 @@ export const CreateMealScreen = () => {
   const [nome, setNome] = useState('');
   const [descricao, setDescricao] = useState('');
   const [data, setData] = useState('');
-  const [hora, setHora] = useState('');
   const [dentroDieta, setDentroDieta] = useState<boolean | null>(null);
   const [isRegisterCompleteModalShow, setIsRegisterCompleteModalShow] = useState(false)
 
@@ -37,7 +36,8 @@ export const CreateMealScreen = () => {
       name: nome,
       description: descricao,
       dateTime: new Date(),
-      isOnDiet: dentroDieta
+      isOnDiet: dentroDieta,
+      id: String(new Date().getTime())
     })
 
     setIsRegisterCompleteModalShow(true)
@@ -124,27 +124,6 @@ export const CreateMealScreen = () => {
                 onChangeText={setDescricao}
                 multiline
               />
-
-              <View style={styles.row}>
-                <View style={[styles.column, {
-                  marginRight: 20
-                }]}>
-                  <Text style={styles.label}>Data</Text>
-                  <TextInput
-                    style={styles.input}
-                    value={data}
-                    onChangeText={setData}
-                  />
-                </View>
-                <View style={styles.column}>
-                  <Text style={styles.label}>Hora</Text>
-                  <TextInput
-                    style={styles.input}
-                    value={hora}
-                    onChangeText={setHora}
-                  />
-                </View>
-              </View>
 
               <Text style={styles.label}>Está dentro da dieta?</Text>
               <View style={styles.row}>

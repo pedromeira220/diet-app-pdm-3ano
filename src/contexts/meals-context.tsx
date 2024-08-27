@@ -5,6 +5,8 @@ type MealContextType = {
   addMealToList: (meal: Meal) => void
   meals: Meal[]
   getPercentOfMealsInDiet: () => number
+  getMealById: (id: string) => Meal | null
+  deleteMealById: (id: string) => void
 }
 
 export const MealContext = createContext({} as MealContextType)
@@ -59,8 +61,22 @@ export const MealContextProvider: React.FC<MealContextProviderProps> = ({childre
     
   }
 
+  const getMealById = (id: string): Meal | null=> {
+    const mealFound = meals.find(meal => meal.id === id)
+
+    if(!mealFound) {
+      return null
+    }
+
+    return mealFound
+  }
+
+  const deleteMealById = (id: string) => {
+    setMeals(meals.filter(meal => meal.id !== id))
+  }
+
   return (
-    <MealContext.Provider value={{addMealToList, meals, getPercentOfMealsInDiet}}>
+    <MealContext.Provider value={{addMealToList, meals, getPercentOfMealsInDiet, getMealById, deleteMealById}}>
       {children}
     </MealContext.Provider>
   )
